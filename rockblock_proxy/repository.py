@@ -29,17 +29,20 @@ class InfluxDBRepository(AbstractRepository):
         msg.data = json.loads(bytes.fromhex(msg.data.decode()).decode().replace("'", "\""))
 
         if msg.data.get('token', '') == proxy_token:
+
+            msg.data.pop('token', None)
             with InfluxDBClient(url=url, token=token, org=org) as client:
                 write_api = client.write_api(write_options=SYNCHRONOUS)
 
-                point = Point("temperature") \
-                    .tag("device", msg.imei) \
-                    .field("lat", msg.iridium_latitude) \
-                    .field("lon", msg.iridium_longitude) \
-                    .field("value", msg.data['temperature']) \
-                    .time(datetime.utcnow(), WritePrecision.NS)
+                for data in msg.data.keys():
+                    point = Point(data) \
+                        .tag("device", msg.imei) \
+                        .field("lat", msg.iridium_latitude) \
+                        .field("lon", msg.iridium_longitude) \
+                        .field("value", msg.data[data]) \
+                        .time(datetime.utcnow(), WritePrecision.NS)
 
-                write_api.write(bucket=bucket , record=point)
+                    write_api.write(bucket=bucket , record=point)
         else:
             msg.data['token'] = 'invalid'
 
