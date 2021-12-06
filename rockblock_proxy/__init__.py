@@ -14,5 +14,4 @@ app = FastAPI()
 async def receive(msg: RBMessage):
     logger.info(f"Received: '{msg}")
     repo = InfluxDBRepository()
-    repo.add(msg)
-    return msg
+    return repo.add(msg)

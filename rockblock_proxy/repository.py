@@ -25,6 +25,8 @@ class InfluxDBRepository(AbstractRepository):
         bucket = influxdb_info.get('bucket')
         org = influxdb_info.get('org')
 
+        msg.data = float(bytes.fromhex(msg.data.decode()).decode())
+
         with InfluxDBClient(url=url, token=token, org=org) as client:
 
             write_api = client.write_api(write_options=SYNCHRONOUS)
@@ -33,7 +35,9 @@ class InfluxDBRepository(AbstractRepository):
                 .tag("device", msg.imei) \
                 .field("lat", msg.iridium_latitude) \
                 .field("lon", msg.iridium_longitude) \
-                .field("value", float(bytes.fromhex(msg.data.decode()).decode())) \
+                .field("value", msg.data) \
                 .time(datetime.utcnow(), WritePrecision.NS)
 
             write_api.write(bucket=bucket , record=point)
+
+        return msg
