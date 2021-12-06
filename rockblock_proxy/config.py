@@ -4,6 +4,8 @@ from logging import INFO
 LOG_FORMAT = '%(asctime)s - %(levelname)6s - %(message)s'
 LOG_LEVEL = INFO
 
+proxy_token = os.environ.get('PROXY_TOKEN', 'my-token')
+
 def get_influxdb_info():
     host = os.environ.get('INFLUXDB_HOST', 'localhost')
     port = os.environ.get('INFLUXDB_PORT', 8086)

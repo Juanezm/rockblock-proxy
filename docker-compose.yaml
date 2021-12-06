@@ -12,6 +12,7 @@ services:
       - INFLUXDB_TOKEN=my-admin-token
       - INFLUXDB_ORG=my-org
       - INFLUXDB_BUCKET=my-bucket
+      - PROXY_TOKEN=my-token
     volumes:
       - ./rockblock_proxy:/rockblock-proxy/rockblock_proxy
     ports:

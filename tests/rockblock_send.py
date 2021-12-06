@@ -21,7 +21,7 @@ while True:
               "iridium_latitude": 31.4741,
               "iridium_longitude": 144.5242,
               "iridium_cep": 108,
-              "data": f"{20+random.random()}".encode().hex()
+              "data": f"{dict(token='my-token', temperature=20+random.random())}".encode().hex()
        }
 
        r = requests.post(url, headers=headers, data=json.dumps(data))
