@@ -1,0 +1,31 @@
+version: "3"
+services:
+
+  rb_proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_TOKEN=my-admin-token
+      - INFLUXDB_ORG=my-org
+      - INFLUXDB_BUCKET=my-bucket
+    volumes:
+      - ./rockblock_proxy:/rockblock-proxy/rockblock_proxy
+    ports:
+      - "8080:80"
+
+
+  influxdb:
+    image: influxdb:2.0-alpine
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=my-user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
+      - DOCKER_INFLUXDB_INIT_ORG=my-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-admin-token
+    ports:
+      - "8086:8086"
